@@ -22,7 +22,7 @@ class LrCallback(Callback):
             for param_group in self.optimizer.param_groups:
                 param_group['lr'] = cur_lr
 
-            if self.real_step % 300 == 0:
+            if self.real_step % 500 == 0:
                 self.pbar.write('Current learning rate is {:.8f}, real_step: {}'.format(cur_lr, self.real_step))
 
     def on_epoch_end(self):
