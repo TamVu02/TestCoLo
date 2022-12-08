@@ -225,7 +225,7 @@ if __name__ == '__main__':
     parser.add_argument('--warmup_ckpt', default=None)
     parser.add_argument('--version', default="large-cnn", choices=["large", "large-cnn"])
 
-    parser.add_argument('--dataset', default='CNNDM')
+    parser.add_argument('--dataset', default='VNData')
     parser.add_argument('--block_trigram', default=True, type=str2bool)
     parser.add_argument('--ext_num', default=5, type=int)
     parser.add_argument('--metric', default="rouge")
