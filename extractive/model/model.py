@@ -3,7 +3,7 @@ from itertools import combinations
 import torch
 from rouge import rouge_score
 from torch import nn
-from transformers import BartForConditionalGeneration
+from transformers import AutoModel
 from bert_score import BERTScorer
 
 
@@ -31,7 +31,7 @@ class Classifier(nn.Module):
 class BaselineExtModel(nn.Module):
     def __init__(self, args, article_dict=None):
         super(BaselineExtModel, self).__init__()
-        full_bart = BartForConditionalGeneration.from_pretrained(f"facebook/bart-{args.version}")
+        full_bart = AutoModel.from_pretrained(f"vinai/bartpho-word")
         full_bart.resize_token_embeddings(full_bart.config.vocab_size + 3)
         self.encoder = full_bart.get_encoder()
         self.hidden_size = self.encoder.config.hidden_size
@@ -105,7 +105,7 @@ def check_n_gram(sentences, n):
 class CoLoExtModel(nn.Module):
     def __init__(self, args, article_dict=None):
         super(CoLoExtModel, self).__init__()
-        full_bart = BartForConditionalGeneration.from_pretrained(f"facebook/bart-{args.version}")
+        full_bart = AutoModel.from_pretrained(f"vinai/bartpho-word")
         full_bart.resize_token_embeddings(full_bart.config.vocab_size + 3)
         self.encoder = full_bart.get_encoder()
         self.hidden_size = self.encoder.config.hidden_size
@@ -118,7 +118,7 @@ class CoLoExtModel(nn.Module):
         self.block_trigram = args.block_trigram
         #### warning: using bert_score will result in long training time ####
         if self.metric == "bert_score":
-            self.scorer = BERTScorer(model_type="bert-base-uncased", rescale_with_baseline=True, lang='en')
+            self.scorer = BERTScorer(model_type="bert-base-vietnamese-uncased ", rescale_with_baseline=True, lang='vn')
 
         self.article_dict = article_dict
 
@@ -128,7 +128,7 @@ class CoLoExtModel(nn.Module):
         summary = self.article_dict[article_id]['summary']
         sent_id = list(range(min(len(sents), self.ext_num)))
 
-        if "CNNDM" in self.dataset:
+        if "VNData" in self.dataset:
             possible_sent_num1 = 2
             possible_sent_num2 = 3
             indices = list(combinations(sent_id, possible_sent_num1))
