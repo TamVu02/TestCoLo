@@ -8,7 +8,7 @@ import time
 from others.logging import init_logger
 from others.utils import str2bool, mkdir, _get_word_ngrams
 from others.logging import logger
-from transformers import BertTokenizer, RobertaTokenizer, BartTokenizer
+from transformers import AutoTokenizer
 import gc
 import glob
 import hashlib
@@ -19,13 +19,16 @@ import subprocess
 from os.path import join as pjoin
 import torch
 from multiprocess import Pool
+import underthesea
+from underthesea import word_tokenize, sent_tokenize
 
 
 def load_jsonl(data_path):
     data = []
-    with open(data_path) as f:
-        for line in f:
-            data.append(json.loads(line))
+    with open(data_path,encoding='utf-8') as f:
+        alldata=json.load(f)
+        for line in alldata:
+            data.append(line)
     return data
 
 
@@ -92,7 +95,7 @@ def greedy_selection(doc_sent_list, abstract_sent_list, summary_size=3):
 class BartData(object):
     def __init__(self, args):
         self.args = args
-        self.tokenizer = BartTokenizer.from_pretrained('facebook/bart-base')
+        self.tokenizer = AutoTokenizer.from_pretrained("vinai/phobert-base")
         self.tokenizer.add_special_tokens({"additional_special_tokens": ["<sep>", "<cls>"]})
         # self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         self.bos = self.tokenizer.convert_tokens_to_ids('<cls>')
@@ -144,7 +147,6 @@ class BartData(object):
 
         return src_ids, cls_ids, src_txt[:len(cls_ids)], tgt_txt, sent_labels[:len(cls_ids)], real_labels
 
-
 import nltk
 
 
@@ -160,8 +162,8 @@ def format_to_bart(args):
     # text = nltk.sent_tokenize(inst['text'])
     # summary = inst['summary'].split("\n")
     # for other dataset
-    text = inst["text"]
-    summary = inst["summary"]
+    text = underthesea.sent_tokenize(inst['text'])
+    summary = underthesea.sent_tokenize(inst['summary'])
     source, tgt = sent_to_words(text), sent_to_words(summary)
     sent_labels = greedy_selection(source[:parsed_args.max_src_nsents], tgt)
     real_sent_labels = greedy_selection(source, tgt)
@@ -197,17 +199,17 @@ def format_to_bart_mp():
         origin_len = len(formatted_insts)
         formatted_insts = [inst for inst in formatted_insts if inst is not None]
         print(f"pop {origin_len - len(formatted_insts)} insts")
-        with open(os.path.join(save_file), "w") as wf:
+        with open(os.path.join(save_file), "w",encoding='utf-8') as wf:
             for inst in formatted_insts:
-                wf.write(json.dumps(inst) + "\n")
+                wf.write(json.dumps(inst,ensure_ascii=False) + "\n")
         gc.collect()
 
 
 if __name__ == '__main__':
     base_dir = "../datasets"
     parser = argparse.ArgumentParser()
-    parser.add_argument('--raw_path', default=None)
-    parser.add_argument('--save_path', default=None)
+    parser.add_argument('--raw_path', default='drive/MyDrive/RawData')
+    parser.add_argument('--save_path', default='datasets/VNData')
     parser.add_argument('--has_label', type=str2bool, default=False)
     parser.add_argument('--min_src_nsents', default=1, type=int)
     parser.add_argument('--max_src_nsents', default=50, type=int)
@@ -216,10 +218,10 @@ if __name__ == '__main__':
     parser.add_argument('--min_tgt_ntokens', default=5, type=int)
     parser.add_argument('--max_tgt_ntokens', default=500, type=int)
     parser.add_argument('--max_src_ntokens', default=1024, type=int)
-    parser.add_argument('--dataset', default="CNNDM")
+    parser.add_argument('--dataset', default="VNData")
 
     parser.add_argument("--lower", type=str2bool, nargs='?', const=True, default=True)
-    parser.add_argument('--log_file', default='../logs/default.log')
+    parser.add_argument('--log_file', default='TestCoLo\extractive\fastNLP\core\__pycache__\_logger.cpython-310.pyc')
 
     parser.add_argument('--n_cpu', default=36, type=int)
 
@@ -236,6 +238,6 @@ if __name__ == '__main__':
     logger = init_logger(parsed_args.log_file)
     bart = BartData(parsed_args)
 
-    logger.info(time.clock())
+    logger.info(time.process_time())
     format_to_bart_mp()
-    logger.info(time.clock())
+    logger.info(time.process_time())
