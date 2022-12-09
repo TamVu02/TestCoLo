@@ -3,7 +3,7 @@ from itertools import combinations
 import torch
 from rouge import rouge_score
 from torch import nn
-from transformers import AutoModel
+from transformers import MBartForConditionalGeneration
 from bert_score import BERTScorer
 
 
@@ -31,7 +31,7 @@ class Classifier(nn.Module):
 class BaselineExtModel(nn.Module):
     def __init__(self, args, article_dict=None):
         super(BaselineExtModel, self).__init__()
-        full_bart = AutoModel.from_pretrained(f"vinai/bartpho-word")
+        full_bart = MBartForConditionalGeneration.from_pretrained(f"vinai/bartpho-word")
         full_bart.resize_token_embeddings(full_bart.config.vocab_size + 3)
         self.encoder = full_bart.get_encoder()
         self.hidden_size = self.encoder.config.hidden_size
@@ -105,7 +105,7 @@ def check_n_gram(sentences, n):
 class CoLoExtModel(nn.Module):
     def __init__(self, args, article_dict=None):
         super(CoLoExtModel, self).__init__()
-        full_bart = AutoModel.from_pretrained(f"vinai/bartpho-word")
+        full_bart = MBartForConditionalGeneration.from_pretrained(f"vinai/bartpho-word")
         full_bart.resize_token_embeddings(full_bart.config.vocab_size + 3)
         self.encoder = full_bart.get_encoder()
         self.hidden_size = self.encoder.config.hidden_size
