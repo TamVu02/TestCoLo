@@ -7,6 +7,13 @@ from fastNLP.core.callback import Callback
 from fastNLP.core.utils import _get_model_device
 from fastNLP import logger
 
+from pynvml import *
+
+def print_gpu_utilization():
+    nvmlInit()
+    handle = nvmlDeviceGetHandleByIndex(0)
+    info = nvmlDeviceGetMemoryInfo(handle)
+    print(f"GPU memory occupied: {info.used//1024**2} MB.")
 
 class LrCallback(Callback):
     def __init__(self, args):
@@ -24,6 +31,7 @@ class LrCallback(Callback):
 
             if self.real_step % 500 == 0:
                 self.pbar.write('Current learning rate is {:.8f}, real_step: {}'.format(cur_lr, self.real_step))
+                print_gpu_utilization()
 
     def on_epoch_end(self):
         self.pbar.write('Epoch {} is done !!!'.format(self.epoch))
