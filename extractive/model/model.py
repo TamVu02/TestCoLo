@@ -129,8 +129,8 @@ class CoLoExtModel(nn.Module):
         sent_id = list(range(min(len(sents), self.ext_num)))
 
         if "VNData" in self.dataset:
-            possible_sent_num1 = 2
-            possible_sent_num2 = 3
+            possible_sent_num1 = 4
+            possible_sent_num2 = 6
             indices = list(combinations(sent_id, possible_sent_num1))
             indices += list(combinations(sent_id, possible_sent_num2))
             if self.training:
