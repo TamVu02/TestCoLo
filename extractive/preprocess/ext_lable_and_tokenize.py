@@ -95,7 +95,7 @@ def greedy_selection(doc_sent_list, abstract_sent_list, summary_size=3):
 class BartData(object):
     def __init__(self, args):
         self.args = args
-        self.tokenizer = AutoTokenizer.from_pretrained("vinai/phobert-base")
+        self.tokenizer = AutoTokenizer.from_pretrained("vinai/bartpho-word")
         self.tokenizer.add_special_tokens({"additional_special_tokens": ["<sep>", "<cls>"]})
         # self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         self.bos = self.tokenizer.convert_tokens_to_ids('<cls>')
