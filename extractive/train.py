@@ -56,9 +56,9 @@ def test_model_baseline(args):
     print(datasets)
     test_set = datasets.datasets['test']
     article_dict = {}
-    with open(data_paths['test'],encoding='utf-8') as f:
-        alldata=json.load(f)
-        for article in alldata:
+     with open(data_paths['test']) as f:
+        for line in f:
+            article = json.loads(line)
             article_dict[article['article_id']] = {'text': article['text'], 'summary': article['summary']}
     # only need 1 gpu for testing
     device = int(args.gpus)
@@ -83,9 +83,9 @@ def test_model_CoLo(args):
     print(datasets)
     test_set = datasets.datasets['test']
     article_dict = {}
-    with open(data_paths['test'],encoding='utf-8') as f:
-        alldata=json.load(f)
-        for article in alldata:
+    with open(data_paths['test']) as f:
+        for line in f:
+            article = json.loads(line)
             article_dict[article['article_id']] = {'text': article['text'], 'summary': article['summary']}
     # only need 1 gpu for testing
     device = int(args.gpus)
@@ -123,13 +123,13 @@ def train_model_CoLo(args):
     # configure training
     devices, train_params = configure_training(args)
     article_dict = {}
-    with open(data_paths['train'],encoding='utf-8') as f:
-        alldata=json.load(f)
-        for article in alldata:
+    with open(data_paths['train']) as f:
+        for line in f:
+            article = json.loads(line)
             article_dict[article['article_id']] = {'text': article['text'], 'summary': article['summary']}
-    with open(data_paths['val'],encoding='utf-8') as f:
-        alldata=json.load(f)
-        for article in alldata:
+    with open(data_paths['val']) as f:
+        for line in f:
+            article = json.loads(line)
             article_dict[article['article_id']] = {'text': article['text'], 'summary': article['summary']}
     # configure model
     pretrain_model = torch.load(args.warmup_ckpt, map_location="cpu")
@@ -170,13 +170,13 @@ def train_model_baseline(args):
     devices, train_params = configure_training(args)
     # configure model
     article_dict = {}
-    with open(data_paths['train'],encoding='utf-8') as f:
-        alldata=json.load(f)
-        for article in alldata:
+    with open(data_paths['train']) as f:
+        for line in f:
+            article = json.loads(line)
             article_dict[article['article_id']] = {'text': article['text'], 'summary': article['summary']}
-    with open(data_paths['val'],encoding='utf-8') as f:
-        alldata=json.load(f)
-        for article in alldata:
+    with open(data_paths['val']) as f:
+        for line in f:
+            article = json.loads(line)
             article_dict[article['article_id']] = {'text': article['text'], 'summary': article['summary']}
 
     model = BaselineExtModel(args, article_dict)
