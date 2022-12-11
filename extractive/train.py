@@ -56,7 +56,7 @@ def test_model_baseline(args):
     print(datasets)
     test_set = datasets.datasets['test']
     article_dict = {}
-     with open(data_paths['test']) as f:
+    with open(data_paths['test']) as f:
         for line in f:
             article = json.loads(line)
             article_dict[article['article_id']] = {'text': article['text'], 'summary': article['summary']}
