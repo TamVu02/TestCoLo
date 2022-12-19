@@ -236,8 +236,8 @@ if __name__ == '__main__':
     parser.add_argument('--pad_id', default=1, type=int) //vit5 use pad id 0
     args = parser.parse_args()
 
-    default_warmup_dir = f"drive/MyDrive/warmed_up/{args.dataset}/"
-    default_warmup_ckpt = "pretrain.ext.pt(vietnews_dd/mm/yy)"
+    default_warmup_dir = f"drive/MyDrive/warmed_up/{args.dataset}"
+    default_warmup_ckpt = "pretrain.ext.pt"
     if args.warmup_ckpt is None:
         args.warmup_ckpt = f'{default_warmup_dir}/{default_warmup_ckpt}'
 
