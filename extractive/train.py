@@ -22,7 +22,7 @@ def get_data_path(mode, data_path):
     if mode == "train":
         paths['train'] = f'{data_path}/train.id.jsonl'
         paths['val'] = f'{data_path}/val.id.jsonl'
-    paths['test'] = f'{data_path}/test.id.jsonl'
+    #paths['test'] = f'{data_path}/test.id.jsonl'
     return paths
 
 
@@ -50,7 +50,7 @@ def configure_training(args):
 
 def test_model_baseline(args):
     # load dataset
-    data_paths = get_data_path(args.mode, f"datasets/{args.dataset}")
+    data_paths = get_data_path(args.mode, f"drive/MyDrive/datasets/{args.dataset}")
     datasets = CoLoExtLoader(args.pad_id, args.ext_num).process(data_paths)
     print('Information of dataset is:')
     print(datasets)
@@ -77,7 +77,7 @@ def test_model_baseline(args):
 def test_model_CoLo(args):
     models = os.listdir(args.save_path)
     # load dataset
-    data_paths = get_data_path(args.mode, f"datasets/{args.dataset}")
+    data_paths = get_data_path(args.mode, f"drive/MyDrive/datasets/{args.dataset}")
     datasets = CoLoExtLoader(args.pad_id, args.ext_num).process(data_paths)
     print('Information of dataset is:')
     print(datasets)
@@ -108,7 +108,7 @@ def test_model_CoLo(args):
 
 def train_model_CoLo(args):
     # check if the data_path and save_path exists
-    data_paths = get_data_path(args.mode, f"datasets/{args.dataset}")
+    data_paths = get_data_path(args.mode, f"drive/MyDrive/datasets/{args.dataset}")
     for name in data_paths:
         assert exists(data_paths[name])
     if not exists(args.save_path):
@@ -154,7 +154,7 @@ def train_model_CoLo(args):
 
 def train_model_baseline(args):
     # check if the data_path and save_path exists
-    data_paths = get_data_path(args.mode, f"datasets/{args.dataset}")
+    data_paths = get_data_path(args.mode, f"drive/MyDrive/datasets/{args.dataset}")
     for name in data_paths:
         assert exists(data_paths[name])
     if not exists(args.save_path):
@@ -223,9 +223,9 @@ if __name__ == '__main__':
     parser.add_argument('--save_path', default="checkpoints", help='root of the model', type=str)
     parser.add_argument('--warmup', default=True, type=str2bool)
     parser.add_argument('--warmup_ckpt', default=None)
-    parser.add_argument('--version', default="large-cnn", choices=["large", "large-cnn"])
+    parser.add_argument('--version', default="large-cnn", choices=["large", "large-cnn"]) //none for vietnamese dataset
 
-    parser.add_argument('--dataset', default='VNData')
+    parser.add_argument('--dataset', default='vietnews')
     parser.add_argument('--block_trigram', default=True, type=str2bool)
     parser.add_argument('--ext_num', default=5, type=int)
     parser.add_argument('--metric', default="rouge")
@@ -233,11 +233,11 @@ if __name__ == '__main__':
                         help='warm up steps for training', type=int)
 
     # pad value for BART (change this if using other ptm)
-    parser.add_argument('--pad_id', default=1, type=int)
+    parser.add_argument('--pad_id', default=1, type=int) //vit5 use pad id 0
     args = parser.parse_args()
 
-    default_warmup_dir = 'drive/MyDrive'
-    default_warmup_ckpt = "pretrain.ext.pt"
+    default_warmup_dir = 'drive/MyDrive/warmed_up/{args.dataset}/'
+    default_warmup_ckpt = "pretrain.ext.pt(vietnews_dd/mm/yy)"
     if args.warmup_ckpt is None:
         args.warmup_ckpt = f'{default_warmup_dir}/{default_warmup_ckpt}'
 
