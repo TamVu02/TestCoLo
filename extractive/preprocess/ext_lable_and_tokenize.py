@@ -95,7 +95,7 @@ def greedy_selection(doc_sent_list, abstract_sent_list, summary_size=3):
 class BartData(object):
     def __init__(self, args):
         self.args = args
-        self.tokenizer = AutoTokenizer.from_pretrained("vinai/bartpho-word")
+        self.tokenizer = AutoTokenizer.from_pretrained("VietAI/vit5-large")
         self.tokenizer.add_special_tokens({"additional_special_tokens": ["<sep>", "<cls>"]})
         # self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         self.bos = self.tokenizer.convert_tokens_to_ids('<cls>')
@@ -177,7 +177,7 @@ def format_to_bart(args):
 
 
 def format_to_bart_mp():
-    datasets = ['val', 'test', "train"]
+    datasets = ['val', "train"]
     for corpus_type in datasets:
         a_lst = []
         for jsonl_f in glob.glob(pjoin(parsed_args.raw_path, f'{corpus_type}.jsonl')):
@@ -208,8 +208,8 @@ def format_to_bart_mp():
 if __name__ == '__main__':
     base_dir = "../datasets"
     parser = argparse.ArgumentParser()
-    parser.add_argument('--raw_path', default='drive/MyDrive/RawData')
-    parser.add_argument('--save_path', default='datasets/VNData')
+    parser.add_argument('--raw_path', default='drive/MyDrive/vietnews')
+    parser.add_argument('--save_path', default='datasets/vietnews')
     parser.add_argument('--has_label', type=str2bool, default=False)
     parser.add_argument('--min_src_nsents', default=1, type=int)
     parser.add_argument('--max_src_nsents', default=50, type=int)
@@ -218,7 +218,7 @@ if __name__ == '__main__':
     parser.add_argument('--min_tgt_ntokens', default=5, type=int)
     parser.add_argument('--max_tgt_ntokens', default=500, type=int)
     parser.add_argument('--max_src_ntokens', default=1024, type=int)
-    parser.add_argument('--dataset', default="VNData")
+    parser.add_argument('--dataset', default="vietnews")
 
     parser.add_argument("--lower", type=str2bool, nargs='?', const=True, default=True)
     parser.add_argument('--log_file', default='TestCoLo\extractive\fastNLP\core\__pycache__\_logger.cpython-310.pyc')
