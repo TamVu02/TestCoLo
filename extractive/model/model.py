@@ -3,8 +3,9 @@ from itertools import combinations
 import torch
 from rouge import rouge_score
 from torch import nn
-from transformers import MBartForConditionalGeneration
+from transformers import T5ForConditionalGeneration
 from bert_score import BERTScorer
+from torch import nn
 
 
 def fast_rouge(summary_batch, output_batch, device):
@@ -31,8 +32,8 @@ class Classifier(nn.Module):
 class BaselineExtModel(nn.Module):
     def __init__(self, args, article_dict=None):
         super(BaselineExtModel, self).__init__()
-        full_bart = MBartForConditionalGeneration.from_pretrained(f"vinai/bartpho-word")
-        full_bart.resize_token_embeddings(full_bart.config.vocab_size + 3)
+        full_bart = T5ForConditionalGeneration.from_pretrained(f"VietAI/vit5-large-vietnews-summarization")
+        full_bart.set_input_embeddings(nn.Embedding(full_bart.config.vocab_size+4, config.d_model))
         self.encoder = full_bart.get_encoder()
         self.hidden_size = self.encoder.config.hidden_size
         self.decoder = Classifier(self.hidden_size)
@@ -105,8 +106,8 @@ def check_n_gram(sentences, n):
 class CoLoExtModel(nn.Module):
     def __init__(self, args, article_dict=None):
         super(CoLoExtModel, self).__init__()
-        full_bart = MBartForConditionalGeneration.from_pretrained(f"vinai/bartpho-word")
-        full_bart.resize_token_embeddings(full_bart.config.vocab_size + 3)
+        full_bart = T5ForConditionalGeneration.from_pretrained(f"VietAI/vit5-large-vietnews-summarization")
+        full_bart.set_input_embeddings(nn.Embedding(full_bart.config.vocab_size+4, config.d_model))
         self.encoder = full_bart.get_encoder()
         self.hidden_size = self.encoder.config.hidden_size
         self.decoder = Classifier(self.hidden_size)
@@ -128,9 +129,9 @@ class CoLoExtModel(nn.Module):
         summary = self.article_dict[article_id]['summary']
         sent_id = list(range(min(len(sents), self.ext_num)))
 
-        if "VNData" in self.dataset:
-            possible_sent_num1 = 4
-            possible_sent_num2 = 6
+        if "vietnews" in self.dataset:
+            possible_sent_num1 = 2
+            possible_sent_num2 = 3
             indices = list(combinations(sent_id, possible_sent_num1))
             indices += list(combinations(sent_id, possible_sent_num2))
             if self.training:
