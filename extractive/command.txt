@@ -1,0 +1,3 @@
+#change pretrain's name before running train model with baseline
+!python3 TestCoLo/extractive/train.py --mode train --gpus 0 --ext_num 3 --batch_size 4 --n_epochs 3 --dataset vietnews --validate_every 5000 --warmup True --pad_id 0
+!python3 TestCoLo/extractive/train.py --mode train --gpus 0 --ext_num 5 --batch_size 4 --n_epochs 5 --dataset vietnews --validate_every 5000 --warmup False --pad_id 0
