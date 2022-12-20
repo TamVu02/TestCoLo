@@ -223,7 +223,7 @@ if __name__ == '__main__':
     parser.add_argument('--save_path', default="checkpoints", help='root of the model', type=str)
     parser.add_argument('--warmup', default=True, type=str2bool)
     parser.add_argument('--warmup_ckpt', default=None)
-    parser.add_argument('--version', default="large-cnn", choices=["large", "large-cnn"]) //none for vietnamese dataset
+    parser.add_argument('--version', default="large-cnn", choices=["large", "large-cnn"]) #none for vietnamese dataset
 
     parser.add_argument('--dataset', default='vietnews')
     parser.add_argument('--block_trigram', default=True, type=str2bool)
@@ -233,7 +233,7 @@ if __name__ == '__main__':
                         help='warm up steps for training', type=int)
 
     # pad value for BART (change this if using other ptm)
-    parser.add_argument('--pad_id', default=1, type=int) //vit5 use pad id 0
+    parser.add_argument('--pad_id', default=1, type=int) #vit5 use pad id 0
     args = parser.parse_args()
 
     default_warmup_dir = f"drive/MyDrive/warmed_up/{args.dataset}"
