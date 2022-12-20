@@ -220,7 +220,7 @@ if __name__ == '__main__':
                         help='total number of training epochs', type=int)
     parser.add_argument('--validate_every', default=8000,
                         help='number of update steps for checkpoint', type=int)
-    parser.add_argument('--save_path', default="checkpoints", help='root of the model', type=str)
+    parser.add_argument('--save_path', default="drive/MyDrive/checkpoints", help='root of the model', type=str)
     parser.add_argument('--warmup', default=True, type=str2bool)
     parser.add_argument('--warmup_ckpt', default=None)
     parser.add_argument('--version', default="large-cnn", choices=["large", "large-cnn"]) #none for vietnamese dataset
