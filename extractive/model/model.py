@@ -33,7 +33,7 @@ class BaselineExtModel(nn.Module):
     def __init__(self, args, article_dict=None):
         super(BaselineExtModel, self).__init__()
         full_bart = T5ForConditionalGeneration.from_pretrained(f"VietAI/vit5-large-vietnews-summarization")
-        full_bart.set_input_embeddings(nn.Embedding(full_bart.config.vocab_size+4, config.d_model))
+        full_bart.set_input_embeddings(nn.Embedding(full_bart.config.vocab_size+4, full_bart.config.d_model))
         self.encoder = full_bart.get_encoder()
         self.hidden_size = self.encoder.config.hidden_size
         self.decoder = Classifier(self.hidden_size)
@@ -107,7 +107,7 @@ class CoLoExtModel(nn.Module):
     def __init__(self, args, article_dict=None):
         super(CoLoExtModel, self).__init__()
         full_bart = T5ForConditionalGeneration.from_pretrained(f"VietAI/vit5-large-vietnews-summarization")
-        full_bart.set_input_embeddings(nn.Embedding(full_bart.config.vocab_size+4, config.d_model))
+        full_bart.set_input_embeddings(nn.Embedding(full_bart.config.vocab_size+4, full_bart.config.d_model))
         self.encoder = full_bart.get_encoder()
         self.hidden_size = self.encoder.config.hidden_size
         self.decoder = Classifier(self.hidden_size)
